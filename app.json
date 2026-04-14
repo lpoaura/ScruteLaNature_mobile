@@ -3,6 +3,7 @@
     "name": "Scrute la nature",
     "slug": "LPOMobApp",
     "version": "2.1.1",
+    "newArchEnabled": true,
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -24,7 +25,9 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.lpo.GameOfNature",
-      "versionCode": 17
+      "versionCode": 17,
+      "targetSdkVersion": 35,
+      "compileSdkVersion": 35
     },
     "web": {
       "favicon": "./assets/favicon.png"
