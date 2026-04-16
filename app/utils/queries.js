@@ -175,7 +175,8 @@ async function getAudioDataURLFromURL(url) {
     try {
         const response = await fetch(url);
         if (!response.ok) {
-            throw new Error(`Failed to fetch resource: ${response.status} ${response.statusText}`);
+            // Fallback : retourne l'URL originale si le fetch échoue
+            return url;
         }
 
         const blob = await response.blob();
@@ -186,12 +187,12 @@ async function getAudioDataURLFromURL(url) {
                 const base64Data = dataUrl.split(',')[1]; // Remove prefix to keep the data only
 				resolve(base64Data);
 			}
-            reader.onerror = () => reject(new Error("Failed to read Blob as Data URL"));
+            reader.onerror = () => resolve(url); // Fallback sur erreur de lecture
             reader.readAsDataURL(blob);
         });
     } catch (error) {
-        console.error("Error in getDataURLFromURL:", error);
-        throw error;
+        // Fallback silencieux : retourne l'URL originale
+        return url;
     }
 }
 
@@ -199,19 +200,20 @@ async function getDataURLFromURL(url) {
     try {
         const response = await fetch(url);
         if (!response.ok) {
-            throw new Error(`Failed to fetch resource: ${response.status} ${response.statusText}`);
+            // Fallback : retourne l'URL originale si le fetch échoue (ex: 402)
+            return url;
         }
 
         const blob = await response.blob();
         return await new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onloadend = () => resolve(reader.result);
-            reader.onerror = () => reject(new Error("Failed to read Blob as Data URL"));
+            reader.onerror = () => resolve(url); // Fallback sur erreur de lecture
             reader.readAsDataURL(blob);
         });
     } catch (error) {
-        console.error("Error in getDataURLFromURL:", error);
-        throw error;
+        // Fallback silencieux : retourne l'URL originale
+        return url;
     }
 }
 

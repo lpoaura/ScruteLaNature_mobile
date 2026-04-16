@@ -22,12 +22,12 @@ class TransitionInfo extends Component {
         const { parcours } = this.props;
         const size = parcours.length;
         console.log(parcours[size-1].parcoursId)
-        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
         this.loadAudio();
     }
 
     componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+        if (this.backHandler) this.backHandler.remove();
         const { audio } = this.state;
         if (audio) {
             audio.unloadAsync();
