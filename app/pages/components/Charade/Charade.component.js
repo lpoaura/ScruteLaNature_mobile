@@ -21,12 +21,12 @@ class Charade extends Component {
     }
 
     componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
         this.loadAudio();
     }
     
     componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+        if (this.backHandler) this.backHandler.remove();
         const { audio } = this.state;
         if (audio) {
             audio.unloadAsync();
