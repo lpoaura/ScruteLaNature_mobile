@@ -24,11 +24,23 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.lpo.GameOfNature",
-      "versionCode": 17,
-      "targetSdkVersion": 35,
-      "compileSdkVersion": 35
+      "package": "com.lpo.GameOfNature"
     },
+    "plugins": [
+      "expo-asset",
+      "expo-sqlite",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "minSdkVersion": 24,
+            "ndkVersion": "27.1.12297006"
+          }
+        }
+      ]
+    ],
     "web": {
       "favicon": "./assets/favicon.png"
     },

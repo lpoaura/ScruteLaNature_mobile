@@ -25,11 +25,11 @@ class FinParcoursPage extends Component {
 
     // empêche le retour en arrière de la page
     componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+        if (this.backHandler) this.backHandler.remove();
     }
     
     handleBackButtonClick() {
