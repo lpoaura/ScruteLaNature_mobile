@@ -10,7 +10,7 @@ const HomeTab = ({focused}) => {
     return (
         <View style={styles.tabContainer}>
             <View style={styles.circle}>
-                <Icon name="home" color={focused ? 'white' : 'lightgray'} size={30} marginBottom={20}/>
+                <Icon name="home" color={'white'} size={28}/>
             </View>
         </View>
     );

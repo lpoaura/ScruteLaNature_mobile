@@ -4,103 +4,96 @@ import { useEffect } from 'react';
 
 export default function (props) {
     const navigation = useNavigation();
-    const currentGame = props.parcours[0]; // étape en cours
-    var size = props.parcours.length;
-    if (props.parcours[size - 1].type != "score_data") {
-        props.parcours.push({ type: "score_data", score: 0, score_max: 0, parcoursId: props.parcoursId });
-        size = size + 1;
-    }
 
     const parcoursInfo = props.parcoursInfo; // nom et informations du parcours
-    const parcours = props.parcours.slice(1); // reste du parcours
-    
-    /*if (parcours.type.find((item) => item == parcours.type) === "fin_parcours") {
-      currentGame.sizeleft = size - 3;
-      parcours.length = size - 1;
-    }*/
+    const currentGame = props.parcours[0]; // étape en cours
 
-    currentGame.sizeleft = size - 2;
+    // Copie pour éviter la mutation des props
+    const parcoursWithScore = [...props.parcours];
+    if (parcoursWithScore[parcoursWithScore.length - 1].type !== "score_data") {
+        parcoursWithScore.push({ type: "score_data", score: 0, score_max: 0, parcoursId: props.parcoursId });
+    }
+    const size = parcoursWithScore.length;
+    const parcours = parcoursWithScore.slice(1); // reste du parcours
+    const currentGameWithSize = { ...currentGame, sizeleft: size - 2 };
 
     useEffect(() => {
         switch (currentGame.type) {
             case ("jeu_info"): {
-                navigation.navigate("LeSaviezVousPage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGame });
+                navigation.navigate("LeSaviezVousPage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGameWithSize });
                 break;
             }
             
             case ("jeu_blague"): {
-                navigation.navigate("JokePage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGame });
+                navigation.navigate("JokePage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGameWithSize });
                 break;
             }
 
             case ("jeu_qcm"): {
-                navigation.navigate("QcmPage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGame });
+                navigation.navigate("QcmPage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGameWithSize });
                 break;
             }
 
             case ("jeu_intrus"): {
-                navigation.navigate("FindIntruderPage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGame });
+                navigation.navigate("FindIntruderPage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGameWithSize });
                 break;
             }
 
             case ("jeu_pyramide"): {
-                navigation.navigate("PyramidPage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGame });
+                navigation.navigate("PyramidPage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGameWithSize });
                 break;
             }
 
             case ("transi_gps"): {
-                navigation.navigate("TransitionGPSPage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGame });
+                navigation.navigate("TransitionGPSPage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGameWithSize });
                 break;
             }
 
             case ("jeu_code"): {
-                navigation.navigate("CodeGamePage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGame });
+                navigation.navigate("CodeGamePage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGameWithSize });
                 break;
             }
 
             case ("jeu_cesar"): {
-                navigation.navigate("CodeCesarPage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGame });
+                navigation.navigate("CodeCesarPage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGameWithSize });
                 break;
             }
 
             case ("jeu_compterimage"): {
-                navigation.navigate("CompterImagePage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGame });
+                navigation.navigate("CompterImagePage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGameWithSize });
                 break;
             }
 
             case ("transi_info"): {
-                navigation.navigate("TransitionInfoPage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGame });
+                navigation.navigate("TransitionInfoPage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGameWithSize });
                 break;
             }
 
             case ("jeu_charade"): {
-                navigation.navigate("CharadePage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGame });
+                navigation.navigate("CharadePage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGameWithSize });
                 break;
             }
 
             case ("jeu_rebus"): {
-                navigation.navigate("RebusPage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGame });
+                navigation.navigate("RebusPage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGameWithSize });
                 break;
             }
 
             case ("jeu_silhouette"): {
-                navigation.navigate("FindSilhouettePage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGame });
+                navigation.navigate("FindSilhouettePage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGameWithSize });
                 break;
             }
 
             case ("jeu_ecogeste"): {
-                navigation.navigate("EcoGestePage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGame });
+                navigation.navigate("EcoGestePage", { parcoursInfo: parcoursInfo, parcours: parcours, currentGame: currentGameWithSize });
                 break;
             }
 
-            /*case ("fin_parcours"): {
-              props.parcours[size - 1].type = "fin_parcours";
-              props.parcours[size - 1].info = currentGame;
-            }*/
-
             default:
-                navigation.navigate("FinParcoursPage", { parcours: parcours, currentGame: props.parcours[size - 1] });
+                navigation.navigate("FinParcoursPage", { parcours: parcours, currentGame: parcoursWithScore[size - 1] });
                 break;
         }
-    })
+    }, []) // [] : navigation uniquement au montage, pas à chaque re-render
+
+    return null;
 }

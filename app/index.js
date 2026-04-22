@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Navigation from './routes/Navigation'
 import { autoSignIn } from './config/firebaseConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { I18nManager } from 'react-native';
 
 class LPOMobApp extends Component {
 	render() {
@@ -16,7 +17,8 @@ class LPOMobApp extends Component {
 
 const App = () => {
 	useEffect(() => {
-		autoSignIn();	  
+		autoSignIn();
+		I18nManager.allowRTL(false);
 	}, []);
 	return <LPOMobApp />;
 };
