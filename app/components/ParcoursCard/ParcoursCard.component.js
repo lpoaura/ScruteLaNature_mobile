@@ -86,7 +86,9 @@ const ParcoursCard = (props) => {
             )}
             <Text style={styles.texte}>{description}</Text>
             {loading && (
-                <ActivityIndicator size="small" color={styles.activityIndicator.color} style={styles.activityIndicator}/>
+                <View style={styles.activityIndicatorContainer}>
+                    <ActivityIndicator size="small" color={styles.activityIndicator.color} style={styles.activityIndicator}/>
+                </View>
             )}
             {!loading && props.dataLoaded && (
                 <>

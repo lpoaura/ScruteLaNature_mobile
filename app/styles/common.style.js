@@ -4,7 +4,8 @@ import theme from '../styles/theme.style.js'
 export default StyleSheet.create({
 
 	bouton: {
-		padding: 10,
+		paddingVertical: 12,
+		paddingHorizontal: 20,
 		margin: 10,
 		borderRadius: 30,
 		backgroundColor: theme.PRIMARY_COLOR,
@@ -57,30 +58,40 @@ export default StyleSheet.create({
 		padding: 5,
 		margin: 5,
 		textAlign: 'left',
+		lineHeight: 22,
 	},
 
 	card: {
-		backgroundColor: theme.LIGHT_GRAY_COLOR,
+		backgroundColor: theme.BACKGROUND_COLOR_WHITE,
 		width: '95%',
-		borderRadius: 30,
-		marginVertical: 5,
-		padding: 10,
+		borderRadius: 20,
+		marginVertical: 8,
+		padding: 16,
 		justifyContent: 'space-between',
 		alignItems: 'flex-start',
 		alignSelf: 'center',
+		shadowColor: 'rgba(0, 0, 0, 0.08)',
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 1,
+		shadowRadius: 8,
+		elevation: 2,
 	},
 
 	cardBegin: {
 		paddingVertical: theme.CONTAINER_PADDING,
-		backgroundColor: theme.LIGHT_GRAY_COLOR,
+		backgroundColor: theme.BACKGROUND_COLOR_WHITE,
 		width: '90%',
-		borderRadius: 30,
+		borderRadius: 24,
 		marginVertical: 20,
-		padding: 10,
+		padding: 16,
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		flex: -1,
-
+		shadowColor: 'rgba(0, 0, 0, 0.08)',
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 1,
+		shadowRadius: 8,
+		elevation: 2,
 	},
 
 	globalContainer: {
@@ -120,14 +131,15 @@ export default StyleSheet.create({
 		fontSize: theme.FONT_SIZE_LARGE,
 		fontWeight: theme.FONT_WEIGHT_BOLD,
 		textAlign: 'justify',
-		borderColor: '#000000',
-		borderWidth: 1,
+		borderColor: '#D0D5DD',
+		borderWidth: 1.5,
 		marginBottom: 50,
-		borderRadius: 20,
-		padding: 10,
+		borderRadius: 16,
+		padding: 12,
 		margin: 10,
 		marginLeft: 20,
 		paddingRight: 50,
+		backgroundColor: '#ffffff',
 	},
 
 	rightAlign: {
@@ -136,7 +148,7 @@ export default StyleSheet.create({
 	},
 
 	outsideSafeArea: {
-		backgroundColor: theme.SECONDARY_COLOR,
+		backgroundColor: theme.BACKGROUND_COLOR_WHITE,
 		flex: 1,
 	},
 
@@ -150,15 +162,22 @@ export default StyleSheet.create({
 	},
 
 	parcoursCardList: {
-        minWidth: '100%',
+        width: '100%',
+        alignItems: 'center',
+        paddingBottom: 100,
 	},
 
 	audioButton: {
         marginTop: 10,
-        padding: 10,
-        backgroundColor: '#ddd',
-        borderRadius: 20,
+        padding: 12,
+        backgroundColor: theme.SECONDARY_LIGHT,
+        borderRadius: 16,
         alignItems: 'center',
+        shadowColor: 'rgba(0, 0, 0, 0.05)',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 1,
+        shadowRadius: 4,
+        elevation: 1,
 	},
 	
     audioButtonText: {
