@@ -19,6 +19,11 @@ export default StyleSheet.create({
         marginVertical: 10,
         paddingRight: 10,
         paddingLeft: 20,
+        shadowColor: 'rgba(0, 0, 0, 0.05)',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 1,
+        shadowRadius: 4,
+        elevation: 1,
     },
 
     textInputStyle: {
@@ -33,8 +38,17 @@ export default StyleSheet.create({
     },
 
     touchableItem: {
-        backgroundColor: theme.BACKGROUND_COLOR_LIGHT,
-        paddingHorizontal: 10,
+        backgroundColor: theme.BACKGROUND_COLOR_WHITE,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        borderRadius: 12,
+        marginHorizontal: 15,
+        marginVertical: 4,
+        shadowColor: 'rgba(0, 0, 0, 0.04)',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 1,
+        shadowRadius: 3,
+        elevation: 1,
     },
 
     textAreaStyle: {

@@ -70,7 +70,13 @@ export default StyleSheet.create({
 
     activityIndicator: {
         ...common.activityIndicator,
-		alignSelf: 'center',
 		marginVertical: 20,
+    },
+
+    activityIndicatorContainer: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginVertical: 20,
     }
 })

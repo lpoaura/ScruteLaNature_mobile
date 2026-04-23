@@ -60,6 +60,7 @@ class ListeParcoursLocal extends Component {
                             extraData={this.props.refresh}
                             data={allDataSource}
                             keyExtractor={(item, index) => index.toString()}
+                            scrollEnabled={true}
                             // Pour tous les parcours de la commune, on affiche la carte du parcours
                             renderItem={({ item }) => { // Un parcours
                                 return (
