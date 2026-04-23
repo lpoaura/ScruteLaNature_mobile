@@ -153,13 +153,24 @@ function Navigation(props) {
         <Tab.Navigator
             screenOptions={{
                 tabBarStyle: {
-                    backgroundColor: theme.SECONDARY_COLOR,
+                    backgroundColor: '#ffffff',
+                    height: 70,
+                    paddingBottom: 10,
+                    paddingTop: 10,
+                    borderTopWidth: 0,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: -2 },
+                    shadowOpacity: 0.08,
+                    shadowRadius: 10,
+                    elevation: 10,
                 },
-                tabBarItemStyle: {
-                    marginTop: 5,
+                tabBarActiveTintColor: theme.PRIMARY_COLOR,
+                tabBarInactiveTintColor: '#9AA5B1',
+                tabBarLabelStyle: {
+                    fontSize: 11,
+                    fontWeight: '600',
+                    marginTop: 2,
                 },
-                tabBarActiveTintColor: 'green',
-                tabBarInactiveTintColor: 'gray',
             }}
             initialRouteName='Accueil'
         >
@@ -168,8 +179,8 @@ function Navigation(props) {
                 component={CreditPage}
                 options={{
                     headerShown: false,
-                    tabBarIcon: () => (
-                        <Icon name="information" color={theme.PRIMARY_COLOR} size={30}/>
+                    tabBarIcon: ({ focused }) => (
+                        <Icon name={focused ? "information" : "information-outline"} color={focused ? theme.PRIMARY_COLOR : '#9AA5B1'} size={26}/>
                     ),
                 }}
             />
@@ -178,8 +189,8 @@ function Navigation(props) {
                 component={CGUPage}
                 options={{
                     headerShown: false,
-                    tabBarIcon: () => (
-                        <Icon name="file-document-outline" color={theme.PRIMARY_COLOR} size={30}/>
+                    tabBarIcon: ({ focused }) => (
+                        <Icon name={focused ? "file-document" : "file-document-outline"} color={focused ? theme.PRIMARY_COLOR : '#9AA5B1'} size={26}/>
                     ),
                 }}
             />
@@ -192,7 +203,7 @@ function Navigation(props) {
                         <HomeTab focused={focused}/>
                     ),
                     tabBarLabel: ({ focused }) => (
-                        <Text style={{ color: focused ? 'white' : 'lightgray', fontSize:11 }}>
+                        <Text style={{ color: focused ? theme.PRIMARY_COLOR : '#9AA5B1', fontSize: 11, fontWeight: '600', marginTop: 2 }}>
                             Accueil
                         </Text>
                     ),
@@ -203,8 +214,8 @@ function Navigation(props) {
                 component={ListeParcoursLocalPage}
                 options={{
                     headerShown: false,
-                    tabBarIcon: () => (
-                        <Icon name="download" color={theme.PRIMARY_COLOR} size={30}/>
+                    tabBarIcon: ({ focused }) => (
+                        <Icon name={focused ? "download" : "download-outline"} color={focused ? theme.PRIMARY_COLOR : '#9AA5B1'} size={26}/>
                     ),
                 }}
             />
@@ -214,8 +225,8 @@ function Navigation(props) {
                 component={MapPage}
                 options={{
                     headerShown: false,
-                    tabBarIcon: () => (
-                        <Icon name="map" color={theme.PRIMARY_COLOR} size={30}/>
+                    tabBarIcon: ({ focused }) => (
+                        <Icon name={focused ? "map" : "map-outline"} color={focused ? theme.PRIMARY_COLOR : '#9AA5B1'} size={26}/>
                     ),
                 }}
             />
