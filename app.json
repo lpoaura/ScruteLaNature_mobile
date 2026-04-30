@@ -2,7 +2,7 @@
   "expo": {
     "name": "Scrute la nature",
     "slug": "LPOMobApp",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "newArchEnabled": true,
     "orientation": "portrait",
     "icon": "./assets/icon.png",
