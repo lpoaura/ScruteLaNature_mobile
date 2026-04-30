@@ -17,6 +17,12 @@ class GameOutcome extends Component {
 
     componentDidMount() {
         this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+
+        // Mise à jour du score une seule fois au montage (pas dans render qui peut être appelé plusieurs fois)
+        this.props.parcours[this.props.parcours.length - 1].score_max++;
+        if (this.props.win) {
+            this.props.parcours[this.props.parcours.length - 1].score++;
+        }
     }
 
     componentWillUnmount() {
@@ -62,11 +68,6 @@ class GameOutcome extends Component {
         winText = this.props.currentGame.titreSiBonneReponse;
         loseText = this.props.currentGame.titreSiMauvaiseReponse;
         }
-        this.props.parcours[this.props.parcours.length - 1].score_max++;
-        if (win) {
-        this.props.parcours[this.props.parcours.length - 1].score++;
-        }
-
         return (
             <SafeAreaView style={styles.outsideSafeArea}>
                 <TopBarre name={topBarreName} />
@@ -82,7 +83,7 @@ class GameOutcome extends Component {
                             {(illustration != '') && (<Image source={{ uri: illustration }} style={styles.areaImage} />)}
                             <Text style={common.description}>{paragraph}</Text>
                         </View>
-                        <NextPage pageName="GamePage" parameters={{ parcoursInfo: this.props.parcoursInfo, parcours: this.props.parcours }}></NextPage>
+                        <NextPage pageName="GamePage" parameters={{ parcoursInfo: this.props.parcoursInfo, parcours: this.props.parcours }} blockButton={true}></NextPage>
                     </ScrollView>
                 </View>
             </SafeAreaView>

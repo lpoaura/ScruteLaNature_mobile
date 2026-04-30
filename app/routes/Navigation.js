@@ -22,6 +22,7 @@ import HomePage from './../pages/Home.page';
 import EcoGestePage from './../pages/EcoGeste.page';
 import ParcoursBeginPage from '../pages/ParcoursBegin.page.js';
 import MapPage from '../pages/Map.page.js';
+import ProfilPage from '../pages/Profil.page.js';
 import PrincipesPage from '../pages/Principes.page.js';
 import { Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -139,6 +140,10 @@ function HomeStack() {
 				name="ParcoursBeginPage"
 				component={ParcoursBeginPage}
 			/>
+			<Stack.Screen
+				name="MapPage"
+				component={MapPage}
+			/>
 		</Stack.Navigator>
 
 	)
@@ -221,12 +226,12 @@ function Navigation(props) {
             />
 
             <Tab.Screen
-                name="Carte"
-                component={MapPage}
+                name="Historique"
+                component={ProfilPage}
                 options={{
                     headerShown: false,
                     tabBarIcon: ({ focused }) => (
-                        <Icon name={focused ? "map" : "map-outline"} color={focused ? theme.PRIMARY_COLOR : '#9AA5B1'} size={26}/>
+                        <Icon name={focused ? "trophy" : "trophy-outline"} color={focused ? theme.PRIMARY_COLOR : '#9AA5B1'} size={26}/>
                     ),
                 }}
             />

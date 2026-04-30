@@ -24,3 +24,6 @@ comptes.*
 .venv
 venv
 *.pyc
+
+env
+.env 

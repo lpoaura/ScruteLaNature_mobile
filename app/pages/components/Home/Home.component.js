@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native';
 import TopBarre from './../../../components/TopBarre/TopBarre.component';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class Home extends Component {
     constructor(props) {
@@ -19,6 +20,7 @@ class Home extends Component {
         return (
             <SafeAreaView style={styles.outsideSafeArea}>
                 <TopBarre name="Accueil" />
+                <View style={{ flex: 1 }}>
                 <ScrollView style={styles.scrollView}>
                 <View style={styles.globalContainer}>
                     <Text style={styles.MainTitle}>Scrute la nature</Text>
@@ -59,6 +61,14 @@ class Home extends Component {
                     </View>
                 </View>
                 </ScrollView>
+                <TouchableOpacity
+                    style={styles.fab}
+                    onPress={() => navigation.navigate('MapPage')}
+                >
+                    <Icon name="map" size={22} color="white" />
+                    <Text style={styles.fabLabel}>Carte</Text>
+                </TouchableOpacity>
+                </View>
             </SafeAreaView>
         );
     }

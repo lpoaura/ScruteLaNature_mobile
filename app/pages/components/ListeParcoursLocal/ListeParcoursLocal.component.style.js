@@ -28,5 +28,14 @@ export default StyleSheet.create({
 
     parcoursCardList: {
         ...common.parcoursCardList,
-    }
+    },
+
+    columnWrapper: {
+        justifyContent: 'center',
+        paddingHorizontal: 4,
+    },
+
+    columnItem: {
+        flex: 1,
+    },
 })

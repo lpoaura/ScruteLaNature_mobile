@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, Image, TouchableOpacity, ActivityIndicator, Alert, Animated } from 'react-native';
 import styles from './ParcoursCard.component.style'
 import { useNavigation } from '@react-navigation/native';
 import { ToastAndroid } from 'react-native';
@@ -7,10 +7,31 @@ import { useFocusEffect } from "@react-navigation/native";
 import databaseService from '../../utils/localStorage';
 import InfoLogoText from '../InfoLogoText/InfoLogoText.component';
 
+const getProgressLabel = (progress) => {
+    if (progress < 15) return 'Connexion au serveur...';
+    if (progress < 88) return 'Téléchargement des données...';
+    if (progress < 100) return 'Sauvegarde locale...';
+    return 'Terminé !';
+};
+
 const ParcoursCard = (props) => {
     const [score, setScore] = useState(null);
     const [scoreMax, setScoreMax] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [downloadProgress, setDownloadProgress] = useState(null);
+    const progressAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        if (downloadProgress !== null) {
+            Animated.timing(progressAnim, {
+                toValue: downloadProgress,
+                duration: 400,
+                useNativeDriver: false,
+            }).start();
+        } else {
+            progressAnim.setValue(0);
+        }
+    }, [downloadProgress]);
 
     async function checkLocalSave() {
         try {
@@ -90,7 +111,23 @@ const ParcoursCard = (props) => {
                     <ActivityIndicator size="small" color={styles.activityIndicator.color} style={styles.activityIndicator}/>
                 </View>
             )}
-            {!loading && props.dataLoaded && (
+            {downloadProgress !== null && (
+                <View style={styles.downloadProgressContainer}>
+                    <Text style={styles.downloadProgressLabel}>{getProgressLabel(downloadProgress)}</Text>
+                    <View style={styles.progressBarTrack}>
+                        <Animated.View
+                            style={[styles.progressBarFill, {
+                                width: progressAnim.interpolate({
+                                    inputRange: [0, 100],
+                                    outputRange: ['0%', '100%'],
+                                })
+                            }]}
+                        />
+                    </View>
+                    <Text style={styles.progressPercentText}>{Math.round(downloadProgress)} %</Text>
+                </View>
+            )}
+            {!loading && downloadProgress === null && props.dataLoaded && (
                 <>
                     <View style={styles.rowFlex}>
                         <TouchableOpacity
@@ -126,24 +163,28 @@ const ParcoursCard = (props) => {
                     </View>
                 </>
             )}
-            {!loading && !props.dataLoaded && (
+            {!loading && downloadProgress === null && !props.dataLoaded && (
                 <View style={styles.rowFlex}>
                     <TouchableOpacity
                         onPress={() => {
-                            setLoading(true); // Affiche le loader au début du téléchargement
+                            setDownloadProgress(0);
                             databaseService.telechargerParcoursContents(
                                 props.parcours,
                                 () => {
-                                    setLoading(false); // Cache le loader après le téléchargement
+                                    setDownloadProgress(null);
                                     props.setDataLoaded(true);
                                     ToastAndroid.show("Parcours téléchargé avec succès", ToastAndroid.SHORT);
                                 },
                                 (error) => {
-                                    setLoading(false); // Cache le loader en cas d'erreur
+                                    setDownloadProgress(null);
                                     console.error(error);
                                 },
                                 () => {
+                                    setDownloadProgress(null);
                                     Alert.alert("Connexion Internet indisponible", "Merci de réessayer une fois qu'Internet sera disponible");
+                                },
+                                (progress) => {
+                                    setDownloadProgress(progress);
                                 }
                             );
                         }}

@@ -57,5 +57,27 @@ export default StyleSheet.create({
         ...common.description,
         fontSize: theme.FONT_SIZE_SMALL,
         width:Dimensions.get('window').width * 0.95,
-    }
+    },
+    fab: {
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        width: 62,
+        height: 62,
+        borderRadius: 31,
+        backgroundColor: theme.PRIMARY_COLOR,
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
+        shadowRadius: 6,
+        elevation: 6,
+    },
+    fabLabel: {
+        color: 'white',
+        fontSize: 10,
+        fontWeight: '600',
+        marginTop: 2,
+    },
 });

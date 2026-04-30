@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, FlatList, Text, ActivityIndicator } from 'react-native';
+import { View, FlatList, Text, ActivityIndicator, useWindowDimensions } from 'react-native';
 import TopBarre from './../../../components/TopBarre/TopBarre.component';
 import { getParcoursFromCommune } from './../../../utils/queries';
 import ParcoursCard from './../../../components/ParcoursCard/ParcoursCard.component';
@@ -9,9 +9,12 @@ import styles from './ParcoursChoice.component.style';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import NetInfo from "@react-native-community/netinfo";
 import { useFocusEffect } from "@react-navigation/native";
+import { getNumColumns } from '../../../utils/responsive';
 
 const ParcoursChoice = (props) => {
     const [allDataSource, setAllDataSource] = useState([]);
+    const { width } = useWindowDimensions();
+    const numColumns = getNumColumns(width);
     const communepluscode = props.commune;
     const mapRequestId = props.mapRequestId;
     const commune = communepluscode.endsWith(')') ? communepluscode.substring(0, communepluscode.length - 8) : communepluscode;
@@ -105,8 +108,13 @@ const ParcoursChoice = (props) => {
                         extraData={refresh}
                         data={allDataSource}
                         keyExtractor={(item, index) => index.toString()}
+                        numColumns={numColumns}
+                        key={numColumns.toString()}
+                        columnWrapperStyle={numColumns > 1 ? styles.columnWrapper : null}
                         renderItem={({ item }) => (
-                            <ParcoursCard parcours={item} reload={renderResults} internetAvailable={internetAvailable} refresh={() => setRefresh(!refresh)} />
+                            <View style={numColumns > 1 ? styles.columnItem : null}>
+                                <ParcoursCard parcours={item} reload={renderResults} internetAvailable={internetAvailable} refresh={() => setRefresh(!refresh)} />
+                            </View>
                         )}
                     />
                 </View>

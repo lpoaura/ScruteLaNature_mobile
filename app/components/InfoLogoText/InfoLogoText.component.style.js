@@ -9,14 +9,17 @@ export default StyleSheet.create({
         paddingVertical: 7.5,
         paddingRight: 15,
         paddingLeft: 10,
-        marginHorizontal: 8,
+        marginHorizontal: 4,
+        flex: 1,
+        alignItems: 'center',
     },
 
     text: {
         fontWeight: theme.FONT_WEIGHT_BOLD,
         color: theme.PRIMARY_COLOR,
 		textAlign: 'center',
-        marginLeft: 7.5,        
+        marginLeft: 7.5,
+        flexShrink: 1,
     },
 
     extraSpaceText: {
@@ -24,5 +27,6 @@ export default StyleSheet.create({
         color: theme.PRIMARY_COLOR,
 		textAlign: 'center',
         marginLeft: 10,
+        flexShrink: 1,
     }
 });

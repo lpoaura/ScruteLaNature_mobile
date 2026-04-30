@@ -1,6 +1,6 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { Component, useState } from 'react';
 import { View, Image, Dimensions, ActivityIndicator } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import databaseService from '../../../utils/localStorage';
 import TopBarre from '../../../components/TopBarre/TopBarre.component'
 import styles from './ParcoursBegin.component.style'
@@ -42,7 +42,7 @@ class ParcoursBegin extends Component {
                     {!this.props.isInit ? ( // Affiche le loader si l'état 'loading' est vrai
                         <ActivityIndicator size="large" color={styles.activityIndicator.color} />
                     ) : (
-                        <NextPage pageName="GamePage" parameters={{ parcoursInfo: parcoursInfo, parcours: parcoursEtapes, parcoursId: identifiant }} blockButton={true} text="Commencer" />
+                        <NextPage key={this.props.focusCount} pageName="GamePage" parameters={{ parcoursInfo: parcoursInfo, parcours: parcoursEtapes, parcoursId: identifiant }} blockButton={true} text="Commencer" />
                     )}
                 </View>
             </SafeAreaView>
@@ -56,8 +56,10 @@ export default function (props) {
     const [parcoursInfo, setParcoursInfo] = useState([]);
     const [etapesData, setEtapesData] = useState([]);
     const [isInit, setIsInit] = useState(false);
-    useEffect(() => {
-        async function loadParcours() {
+    const [focusCount, setFocusCount] = useState(0);
+    useFocusEffect(
+        React.useCallback(() => {
+            setFocusCount(c => c + 1);
             databaseService.getParcours(
                 identifiant,
                 (parcours) => {
@@ -73,8 +75,7 @@ export default function (props) {
                     console.error("Error while loading local circuit content :", error.message);
                 }
             );
-        }
-        loadParcours();
-    }, [])
-    return <ParcoursBegin {...props} parcoursInfo={parcoursInfo} etapesData={etapesData} navigation={navigation} isInit={isInit} />;
+        }, [identifiant])
+    )
+    return <ParcoursBegin {...props} parcoursInfo={parcoursInfo} etapesData={etapesData} navigation={navigation} isInit={isInit} focusCount={focusCount} />;
 }

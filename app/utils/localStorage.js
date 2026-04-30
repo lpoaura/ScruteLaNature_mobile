@@ -74,7 +74,7 @@ class LocalDatabaseService {
         }
     }
 
-    async telechargerParcoursContents(parcours, successCallback, errorCallback, internetErrorCallback) {
+    async telechargerParcoursContents(parcours, successCallback, errorCallback, internetErrorCallback, progressCallback = null) {
         try {
             const state = await NetInfo.fetch();
             if (!state.isInternetReachable) {
@@ -82,10 +82,16 @@ class LocalDatabaseService {
                 return;
             }
 
+            if (progressCallback) progressCallback(5);
             console.log("Internet connection established");
-            const result = await getParcoursContents(parcours.identifiant);
+
+            const result = await getParcoursContents(parcours.identifiant, (progress) => {
+                if (progressCallback) progressCallback(progress);
+            });
             const etapes = result.etapes;
             console.log("Firebase data fetched");
+
+            if (progressCallback) progressCallback(90);
 
             this.db.withTransactionSync(() => {
                 this.db.runSync(
@@ -103,6 +109,7 @@ class LocalDatabaseService {
                 console.log(etapes.length, "étape(s) insérée(s)");
             });
 
+            if (progressCallback) progressCallback(100);
             if (successCallback) successCallback();
         } catch (error) {
             errorCallback("Error while retrieving circuit content : " + error.message);
@@ -205,6 +212,30 @@ class LocalDatabaseService {
             successCallback(results);
         } catch (error) {
             errorCallback("SELECT error : " + error.message);
+        }
+    }
+
+    getFullHistory(successCallback, errorCallback) {
+        try {
+            const results = this.db.getAllSync(`
+                SELECT gh.identifiant, gh.parcours_id, gh.score, gh.score_max, gh.date,
+                       p.titre, p.commune
+                FROM GameHistory gh
+                LEFT JOIN Parcours p ON gh.parcours_id = p.identifiant
+                ORDER BY gh.date DESC
+            `, []);
+            successCallback(results);
+        } catch (error) {
+            errorCallback("GameHistory JOIN SELECT error : " + error.message);
+        }
+    }
+
+    deleteHistory(successCallback, errorCallback) {
+        try {
+            this.db.runSync('DELETE FROM GameHistory', []);
+            successCallback();
+        } catch (error) {
+            errorCallback("DELETE GameHistory error : " + error.message);
         }
     }
 
