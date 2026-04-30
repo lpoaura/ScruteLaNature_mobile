@@ -93,7 +93,7 @@ export default function (props) {
                 navigation.navigate("FinParcoursPage", { parcours: parcours, currentGame: parcoursWithScore[size - 1] });
                 break;
         }
-    }, []) // [] : navigation uniquement au montage, pas à chaque re-render
+    }, [currentGame]) // re-run quand l'étape courante change (navigate réutilise l'instance)
 
     return null;
 }

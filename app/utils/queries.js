@@ -112,7 +112,7 @@ export async function getParcoursFromCommune(cityName, id = "") {
 //   ]
 // }
 // If the parcours does not exist : Output : {}
-export async function getParcoursContents(id) {
+export async function getParcoursContents(id, onProgress = null) {
 	try {
 		if (await checkQueryQuota(40, 50) == "block") {
 			return {};
@@ -134,6 +134,11 @@ export async function getParcoursContents(id) {
 			const querySnapshot = await getDocs(collection(db, pathSubColEtape));
 			const subColRes = [];
 
+			if (onProgress) onProgress(15);
+
+			const totalEtapes = querySnapshot.docs.length;
+			let processedEtapes = 0;
+
 			// Iterate through the documents fetched
 			await Promise.all(querySnapshot.docs.map(async (queryDocumentSnapshot) => {
 
@@ -154,6 +159,11 @@ export async function getParcoursContents(id) {
 				}
 
 				subColRes.push(etapeInfo);
+				processedEtapes++;
+				if (onProgress && totalEtapes > 0) {
+					const progress = 15 + Math.floor((processedEtapes / totalEtapes) * 73);
+					onProgress(progress);
+				}
 			}))
 
 			res.etapes = subColRes;

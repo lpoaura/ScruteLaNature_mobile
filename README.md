@@ -4,6 +4,19 @@
 PING 2023 
 
 
+## Changelog
+
+### Avril 2026
+
+#### Corrections de bugs
+- **Relancement de parcours** : correction du bug empêchant de relancer un parcours après l'avoir quitté ou terminé. `ParcoursBeginPage` utilise désormais `useFocusEffect` pour recharger les données et un `key` prop sur le bouton "Commencer" pour forcer son remontage à chaque fois que la page reprend le focus — le bouton est donc toujours actif.
+- **Progression du jeu** : correction du bug bloquant la progression entre les étapes. `GamePage` utilise maintenant `useEffect([currentGame])` au lieu de `useEffect([])` pour se déclencher à chaque changement d'étape lorsque `navigate` réutilise l'instance existante.
+
+#### Améliorations
+- **Page Historique** : refonte de l'interface — grille 2×2 de statistiques (Parties, Parcours, Meilleur, Moyenne), badge coloré de mention, barre de progression du score, titre du parcours affiché en entier, date visible directement dans chaque entrée.
+- **Liste des parcours** : correction de l'alignement des pills d'informations (durée, difficulté, commune) — chaque pill prend désormais un espace égal (`flex: 1`) quelle que soit la longueur du nom de la commune.
+
+
 ## Documentation
 
 [Documentation](https://devops.telecomste.fr/antoine.axel/lpo-mobapp/-/wikis/Documentation)

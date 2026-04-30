@@ -38,5 +38,15 @@ export default StyleSheet.create({
     parcoursCardList: {
         marginTop: 10,
         minWidth: '100%',
-    }
+        paddingBottom: 100,
+    },
+
+    columnWrapper: {
+        justifyContent: 'center',
+        paddingHorizontal: 4,
+    },
+
+    columnItem: {
+        flex: 1,
+    },
 })

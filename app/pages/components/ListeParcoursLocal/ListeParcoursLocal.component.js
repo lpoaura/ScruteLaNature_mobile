@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
-import { View, FlatList, Text, ActivityIndicator } from 'react-native';
+import { View, FlatList, Text, ActivityIndicator, useWindowDimensions } from 'react-native';
 import TopBarre from './../../../components/TopBarre/TopBarre.component';
 import ParcoursCard from './../../../components/ParcoursCard/ParcoursCard.component';
 import theme from './../../../styles/theme.style';
@@ -7,6 +7,7 @@ import styles from './ListeParcoursLocal.component.style'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from "@react-navigation/native";
 import databaseService from '../../../utils/localStorage';
+import { getNumColumns } from '../../../utils/responsive';
 
 /** Composant de la liste des parcours téléchargés
  */
@@ -60,11 +61,16 @@ class ListeParcoursLocal extends Component {
                             extraData={this.props.refresh}
                             data={allDataSource}
                             keyExtractor={(item, index) => index.toString()}
+                            numColumns={this.props.numColumns}
+                            key={this.props.numColumns.toString()}
+                            columnWrapperStyle={this.props.numColumns > 1 ? styles.columnWrapper : null}
                             scrollEnabled={true}
                             // Pour tous les parcours de la commune, on affiche la carte du parcours
                             renderItem={({ item }) => { // Un parcours
                                 return (
-                                    <ParcoursCard parcours={item} reload={this.props.reload} refresh={refreshFunc} />
+                                    <View style={this.props.numColumns > 1 ? styles.columnItem : null}>
+                                        <ParcoursCard parcours={item} reload={this.props.reload} refresh={refreshFunc} />
+                                    </View>
                                 );
                             }}
                         />
@@ -79,6 +85,8 @@ export default function (props) {
     const [refresh, setRefresh] = useState(true);
     const [allDataSource, setAllDataSource] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { width } = useWindowDimensions();
+    const numColumns = getNumColumns(width);
 
     const recupererListeParcours = async () => {
         setLoading(true);
@@ -128,5 +136,6 @@ export default function (props) {
         refresh={refresh}
         setRefresh={setRefresh}
         loading={loading}
+        numColumns={numColumns}
     />;
 }

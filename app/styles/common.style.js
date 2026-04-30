@@ -1,6 +1,9 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import theme from '../styles/theme.style.js'
 
+const screenWidth = Dimensions.get('window').width;
+const isTablet = screenWidth >= 768;
+
 export default StyleSheet.create({
 
 	bouton: {
@@ -64,6 +67,7 @@ export default StyleSheet.create({
 	card: {
 		backgroundColor: theme.BACKGROUND_COLOR_WHITE,
 		width: '95%',
+		maxWidth: isTablet ? 560 : undefined,
 		borderRadius: 20,
 		marginVertical: 8,
 		padding: 16,

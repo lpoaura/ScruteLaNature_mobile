@@ -78,5 +78,44 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginVertical: 20,
-    }
+    },
+
+    downloadProgressContainer: {
+        width: '100%',
+        paddingVertical: 14,
+        alignItems: 'center',
+    },
+
+    downloadProgressLabel: {
+        fontSize: 13,
+        color: '#555555',
+        fontWeight: '500',
+        marginBottom: 10,
+    },
+
+    progressBarTrack: {
+        width: '100%',
+        height: 12,
+        backgroundColor: '#E8F5E9',
+        borderRadius: 6,
+        overflow: 'hidden',
+        shadowColor: 'rgba(0,0,0,0.06)',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 1,
+        shadowRadius: 3,
+        elevation: 1,
+    },
+
+    progressBarFill: {
+        height: '100%',
+        backgroundColor: theme.PRIMARY_COLOR,
+        borderRadius: 6,
+    },
+
+    progressPercentText: {
+        fontSize: 15,
+        color: theme.PRIMARY_COLOR,
+        fontWeight: '700',
+        marginTop: 8,
+    },
 })
