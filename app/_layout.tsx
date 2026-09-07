@@ -7,7 +7,6 @@ import 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { useColorScheme } from '@/src/hooks/use-color-scheme';
-import { Appearance } from 'react-native';
 import { useColorScheme as useNativeWindColorScheme } from 'nativewind';
 import { GluestackUIProvider } from '@/src/components/ui/gluestack-ui-provider';
 import { useAuthStore } from '@/src/store/auth.store';
@@ -74,13 +73,12 @@ export default function RootLayout() {
   const loadStoredAuth = useAuthStore((state) => state.loadStoredAuth);
   const router = useRouter();
 
-  // Synchroniser Appearance (React Native) et NativeWind avec le store
+  // Synchroniser NativeWind avec le store. Le hook useColorScheme personnalisé
+  // lit directement le thème système, sans forcer Appearance côté natif.
   useEffect(() => {
     if (settingsTheme === 'system') {
-      Appearance.setColorScheme(null);
       setNativeWindColorScheme('system');
     } else {
-      Appearance.setColorScheme(settingsTheme as 'light' | 'dark');
       setNativeWindColorScheme(settingsTheme as 'light' | 'dark');
     }
   }, [settingsTheme, setNativeWindColorScheme]);

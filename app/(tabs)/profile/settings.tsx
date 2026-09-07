@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, View, Text, Pressable, Switch, Alert, TextInput, ActivityIndicator, Appearance } from 'react-native';
+import { StyleSheet, ScrollView, View, Text, Pressable, Switch, Alert, TextInput, ActivityIndicator } from 'react-native';
 import { useColorScheme } from '@/src/hooks/use-color-scheme';
-import { useColorScheme as useNativeWindColorScheme } from 'nativewind';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/src/store/auth.store';
 import { useSettingsStore, ThemeType } from '@/src/store/settings.store';
@@ -13,7 +12,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SettingsScreen() {
   const colorScheme = useColorScheme();
-  const { setColorScheme: setNativeWindColorScheme } = useNativeWindColorScheme();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   
@@ -29,13 +27,6 @@ export default function SettingsScreen() {
 
   const handleThemeChange = (newTheme: ThemeType) => {
     setTheme(newTheme);
-    if (newTheme === 'system') {
-      Appearance.setColorScheme(null);
-      setNativeWindColorScheme('system');
-    } else {
-      Appearance.setColorScheme(newTheme);
-      setNativeWindColorScheme(newTheme);
-    }
   };
   
   // Auth State

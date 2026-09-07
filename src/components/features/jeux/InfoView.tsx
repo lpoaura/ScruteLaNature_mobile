@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable, Image, } from 'react-native';
-import { Audio } from 'expo-av';
+import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import { ScrollView } from 'react-native-gesture-handler';
 import Animated, { FadeIn, SlideInRight } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,16 +17,13 @@ interface InfoViewProps {
 
 export function InfoView({ jeu, onSuccess }: InfoViewProps) {
   const insets = useSafeAreaInsets();
-  const [isPlayingAudio, setIsPlayingAudio] = React.useState(false);
-  const soundRef = React.useRef<Audio.Sound | null>(null);
-
-  React.useEffect(() => {
-    return () => {
-      if (soundRef.current) {
-        soundRef.current.unloadAsync();
-      }
-    };
-  }, []);
+  const audioSource = jeu.audioLocalPath
+    ? { uri: jeu.audioLocalPath.startsWith('file://') ? jeu.audioLocalPath : `file://${jeu.audioLocalPath}` }
+    : jeu.audioUrl
+      ? { uri: resolveMediaUrl(jeu.audioUrl) }
+      : null;
+  const audioPlayer = useAudioPlayer(audioSource);
+  const audioStatus = useAudioPlayerStatus(audioPlayer);
 
   // En mode hors-ligne, on privilégie l'image téléchargée localement, sinon l'URL réseau
   const imageSource = jeu.imageLocalPath 
@@ -35,36 +32,16 @@ export function InfoView({ jeu, onSuccess }: InfoViewProps) {
       ? { uri: resolveMediaUrl(jeu.imageUrl) } 
       : null;
 
-  const audioSource = jeu.audioLocalPath
-    ? { uri: jeu.audioLocalPath.startsWith('file://') ? jeu.audioLocalPath : `file://${jeu.audioLocalPath}` }
-    : jeu.audioUrl
-      ? { uri: resolveMediaUrl(jeu.audioUrl) }
-      : null;
-
   const toggleMainAudio = async () => {
     if (!audioSource) return;
     try {
-      if (isPlayingAudio) {
-        if (soundRef.current) {
-          await soundRef.current.pauseAsync();
-          setIsPlayingAudio(false);
-        }
+      if (audioStatus.playing) {
+        audioPlayer.pause();
       } else {
-        if (!soundRef.current) {
-          const { sound } = await Audio.Sound.createAsync(
-            { uri: audioSource.uri },
-            { shouldPlay: true },
-            (status) => {
-              if (status.isLoaded && status.didJustFinish) {
-                setIsPlayingAudio(false);
-              }
-            }
-          );
-          soundRef.current = sound;
-        } else {
-          await soundRef.current.playAsync();
+        if (audioStatus.duration > 0 && audioStatus.currentTime >= audioStatus.duration) {
+          await audioPlayer.seekTo(0);
         }
-        setIsPlayingAudio(true);
+        audioPlayer.play();
       }
     } catch (error) {
       console.error("Error playing audio:", error);
@@ -89,9 +66,9 @@ export function InfoView({ jeu, onSuccess }: InfoViewProps) {
           <View style={styles.contentCard}>
             {audioSource && (
               <Pressable style={styles.audioButton} onPress={toggleMainAudio}>
-                <Ionicons name={isPlayingAudio ? "pause" : "volume-medium"} size={24} color="white" />
+                <Ionicons name={audioStatus.playing ? "pause" : "volume-medium"} size={24} color="white" />
                 <Text style={styles.audioButtonText}>
-                  {isPlayingAudio ? "Mettre en pause" : "Écouter l'audio"}
+                  {audioStatus.playing ? "Mettre en pause" : "Écouter l'audio"}
                 </Text>
               </Pressable>
             )}

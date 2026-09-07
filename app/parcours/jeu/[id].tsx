@@ -479,10 +479,10 @@ export default function JeuParcoursScreen() {
   }, [prepStep, data, currentEtapeOrder]);
 
   // Le déclencheur GPS a été isolé dans <DistanceTrigger> pour éviter de re-render la carte
-  const handleStepReached = (etape: any) => {
+  const handleStepReached = useCallback((etape: Etape) => {
     setReachedEtape(etape);
     setIsPlayingGame(true);
-  };
+  }, []);
 
   const handleGameCompleted = async () => {
     setIsPlayingGame(false);

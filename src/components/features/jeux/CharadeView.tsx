@@ -11,7 +11,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import { Audio } from 'expo-av';
+import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import type { Jeu } from '@/src/types/api.types';
 import { GameQuestion } from "./GameQuestion";
 import { resolveMediaUrl } from '@/src/services/filesystem.service';
@@ -29,17 +29,14 @@ export function CharadeView({ jeu, onSuccess, onFail, forceReveal }: CharadeView
   const insets = useSafeAreaInsets();
   const [answer, setAnswer] = useState('');
   const [isRevealed, setIsRevealed] = useState(false);
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const soundRef = useRef<Audio.Sound | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
-
-  React.useEffect(() => {
-    return () => {
-      if (soundRef.current) {
-        soundRef.current.unloadAsync();
-      }
-    };
-  }, []);
+  const audioSource = jeu.audioLocalPath
+    ? { uri: jeu.audioLocalPath.startsWith('file://') ? jeu.audioLocalPath : `file://${jeu.audioLocalPath}` }
+    : jeu.audioUrl
+      ? { uri: resolveMediaUrl(jeu.audioUrl) }
+      : null;
+  const audioPlayer = useAudioPlayer(audioSource);
+  const audioStatus = useAudioPlayerStatus(audioPlayer);
 
   React.useEffect(() => {
     if (forceReveal) {
@@ -62,36 +59,16 @@ export function CharadeView({ jeu, onSuccess, onFail, forceReveal }: CharadeView
       ? { uri: resolveMediaUrl(jeu.imageUrl) } 
       : null;
 
-  const audioSource = jeu.audioLocalPath
-    ? { uri: jeu.audioLocalPath.startsWith('file://') ? jeu.audioLocalPath : `file://${jeu.audioLocalPath}` }
-    : jeu.audioUrl
-      ? { uri: resolveMediaUrl(jeu.audioUrl) }
-      : null;
-
   const toggleMainAudio = async () => {
     if (!audioSource) return;
     try {
-      if (isPlayingAudio) {
-        if (soundRef.current) {
-          await soundRef.current.pauseAsync();
-          setIsPlayingAudio(false);
-        }
+      if (audioStatus.playing) {
+        audioPlayer.pause();
       } else {
-        if (!soundRef.current) {
-          const { sound } = await Audio.Sound.createAsync(
-            { uri: audioSource.uri },
-            { shouldPlay: true },
-            (status) => {
-              if (status.isLoaded && status.didJustFinish) {
-                setIsPlayingAudio(false);
-              }
-            }
-          );
-          soundRef.current = sound;
-        } else {
-          await soundRef.current.playAsync();
+        if (audioStatus.duration > 0 && audioStatus.currentTime >= audioStatus.duration) {
+          await audioPlayer.seekTo(0);
         }
-        setIsPlayingAudio(true);
+        audioPlayer.play();
       }
     } catch (error) {
       console.error("Error playing audio:", error);
@@ -166,9 +143,9 @@ export function CharadeView({ jeu, onSuccess, onFail, forceReveal }: CharadeView
             
             {audioSource && (
               <Pressable style={styles.audioButton} onPress={toggleMainAudio}>
-                <Ionicons name={isPlayingAudio ? "pause" : "volume-medium"} size={24} color="white" />
+                <Ionicons name={audioStatus.playing ? "pause" : "volume-medium"} size={24} color="white" />
                 <Text style={styles.audioButtonText}>
-                  {isPlayingAudio ? "Mettre en pause" : "Écouter l'indice"}
+                  {audioStatus.playing ? "Mettre en pause" : "Écouter l'indice"}
                 </Text>
               </Pressable>
             )}

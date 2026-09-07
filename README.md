@@ -107,7 +107,7 @@ Pour faciliter la reprise par d'autres développeurs, voici les corrections UI/U
 
 ### 1. Synchronisation du Thème (Dark/Light Mode)
 - **Problème résolu** : Lorsque l'utilisateur sélectionnait le mode "Système" dans les paramètres, le thème de l'application (NativeWind) ne se synchronisait plus avec les changements dynamiques d'iOS/Android.
-- **Solution** : Refonte de la logique dans le fichier layout racine (`app/_layout.tsx`). Utilisation combinée de `Appearance.setColorScheme` (React Native natif) et de `setNativeWindColorScheme` (NativeWind v4) pour forcer la synchronisation des deux moteurs de style.
+- **Solution** : Refonte de la logique dans le fichier layout racine (`app/_layout.tsx`). Le thème applicatif est lu depuis le store et NativeWind est synchronisé avec `setNativeWindColorScheme`, tandis que le mode système repose sur le hook natif réactif `useColorScheme`.
 
 ### 2. Ergonomie UI
 - **Écran de connexion** : Réduction de la taille du logo (fixé à 200x200) sur la page de connexion pour qu'il prenne moins de place et évite de pousser les champs de saisie hors de l'écran sur les petits appareils.

@@ -7,6 +7,11 @@ import type { Etape } from '../types/api.types';
 // Distance en mètres pour considérer qu'une étape est atteinte
 const TRIGGER_DISTANCE_METERS = 15;
 
+// Ne pas valider automatiquement une étape à partir d'une position trop
+// imprécise : le point estimé peut se trouver dans le rayon alors que
+// l'utilisateur est encore loin de l'étape.
+const MAX_AUTO_TRIGGER_ACCURACY_METERS = 25;
+
 interface UseGpsTriggerProps {
   etapes: Etape[];
   currentEtapeOrder: number;
@@ -23,8 +28,11 @@ export function useGpsTrigger({
   const [distanceToNext, setDistanceToNext] = useState<number | null>(null);
   const locationSubscription = useRef<Location.LocationSubscription | null>(null);
   
-  // L'étape actuelle à atteindre (order commence à 1, index 0)
-  const targetEtape = etapes.find((e) => e.order === currentEtapeOrder);
+  // Le reste de l'écran utilise currentEtapeOrder comme une position (1-based)
+  // dans la liste triée. Utiliser le même calcul ici garantit que le GPS
+  // surveille bien l'étape affichée, même si les champs `order` sont décalés
+  // ou non continus dans les données téléchargées.
+  const targetEtape = etapes[Math.max(0, currentEtapeOrder - 1)];
 
   useEffect(() => {
     // Si pas actif ou pas d'étape cible, on ne fait rien
@@ -56,7 +64,7 @@ export function useGpsTrigger({
           timeInterval: 2000, // ou toutes les 2 secondes
         },
         (location) => {
-          const { latitude, longitude } = location.coords;
+          const { latitude, longitude, accuracy } = location.coords;
           
           const distance = haversineDistance(
             latitude,
@@ -68,7 +76,10 @@ export function useGpsTrigger({
           setDistanceToNext(distance);
 
           // Si on est à l'intérieur du rayon de trigger
-          if (distance <= TRIGGER_DISTANCE_METERS) {
+          const hasReliableAccuracy =
+            accuracy !== null && accuracy <= MAX_AUTO_TRIGGER_ACCURACY_METERS;
+
+          if (distance <= TRIGGER_DISTANCE_METERS && hasReliableAccuracy) {
             // Haptic Feedback puissant pour prévenir l'utilisateur
             Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             
