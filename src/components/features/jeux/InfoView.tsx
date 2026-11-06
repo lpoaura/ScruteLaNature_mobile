@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable, Image, } from 'react-native';
-import { Audio } from 'expo-av';
+import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import { ScrollView } from 'react-native-gesture-handler';
 import Animated, { FadeIn, SlideInRight } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,16 +17,10 @@ interface InfoViewProps {
 
 export function InfoView({ jeu, onSuccess }: InfoViewProps) {
   const insets = useSafeAreaInsets();
-  const [isPlayingAudio, setIsPlayingAudio] = React.useState(false);
-  const soundRef = React.useRef<Audio.Sound | null>(null);
-
-  React.useEffect(() => {
-    return () => {
-      if (soundRef.current) {
-        soundRef.current.unloadAsync();
-      }
-    };
-  }, []);
+  const audioPlayer = useAudioPlayer();
+  const audioStatus = useAudioPlayerStatus(audioPlayer);
+  const loadedAudioUri = React.useRef<string | null>(null);
+  const isPlayingAudio = audioStatus.playing;
 
   // En mode hors-ligne, on privilégie l'image téléchargée localement, sinon l'URL réseau
   const imageSource = jeu.imageLocalPath 
@@ -44,27 +38,14 @@ export function InfoView({ jeu, onSuccess }: InfoViewProps) {
   const toggleMainAudio = async () => {
     if (!audioSource) return;
     try {
-      if (isPlayingAudio) {
-        if (soundRef.current) {
-          await soundRef.current.pauseAsync();
-          setIsPlayingAudio(false);
-        }
+      if (audioStatus.playing) {
+        audioPlayer.pause();
       } else {
-        if (!soundRef.current) {
-          const { sound } = await Audio.Sound.createAsync(
-            { uri: audioSource.uri },
-            { shouldPlay: true },
-            (status) => {
-              if (status.isLoaded && status.didJustFinish) {
-                setIsPlayingAudio(false);
-              }
-            }
-          );
-          soundRef.current = sound;
-        } else {
-          await soundRef.current.playAsync();
+        if (loadedAudioUri.current !== audioSource.uri) {
+          audioPlayer.replace(audioSource);
+          loadedAudioUri.current = audioSource.uri;
         }
-        setIsPlayingAudio(true);
+        audioPlayer.play();
       }
     } catch (error) {
       console.error("Error playing audio:", error);

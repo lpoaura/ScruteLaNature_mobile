@@ -30,7 +30,7 @@ export default function SettingsScreen() {
   const handleThemeChange = (newTheme: ThemeType) => {
     setTheme(newTheme);
     if (newTheme === 'system') {
-      Appearance.setColorScheme(null);
+      Appearance.setColorScheme('unspecified');
       setNativeWindColorScheme('system');
     } else {
       Appearance.setColorScheme(newTheme);

@@ -12,7 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import { Audio } from 'expo-av';
+import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import type { Jeu, DonneesQCM } from '@/src/types/api.types';
 import { GameQuestion } from "./GameQuestion";
 import { resolveMediaUrl } from '@/src/services/filesystem.service';
@@ -32,16 +32,18 @@ export function QCMView({ jeu, onSuccess, onFail, forceReveal }: QCMViewProps) {
   const [isRevealed, setIsRevealed] = useState(false);
   const [playingAudioIndex, setPlayingAudioIndex] = useState<number | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const soundRef = useRef<Audio.Sound | null>(null);
+  const audioPlayer = useAudioPlayer();
+  const audioStatus = useAudioPlayerStatus(audioPlayer);
 
   useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      if (soundRef.current) {
-        soundRef.current.unloadAsync();
-      }
     };
   }, []);
+
+  useEffect(() => {
+    if (audioStatus.didJustFinish) setPlayingAudioIndex(null);
+  }, [audioStatus.didJustFinish]);
 
   useEffect(() => {
     if (forceReveal) setIsRevealed(true);
@@ -50,30 +52,11 @@ export function QCMView({ jeu, onSuccess, onFail, forceReveal }: QCMViewProps) {
   const toggleAudio = async (option: string, index: number) => {
     try {
       if (playingAudioIndex === index) {
-        if (soundRef.current) {
-          const status = await soundRef.current.getStatusAsync();
-          if (status.isLoaded && status.isPlaying) {
-            await soundRef.current.pauseAsync();
-          } else if (status.isLoaded) {
-            await soundRef.current.playAsync();
-          }
-        }
+        if (audioStatus.playing) audioPlayer.pause();
+        else audioPlayer.play();
       } else {
-        if (soundRef.current) {
-          await soundRef.current.unloadAsync();
-          soundRef.current = null;
-        }
-        
-        const { sound } = await Audio.Sound.createAsync(
-          { uri: resolveMediaUrl(option) },
-          { shouldPlay: true },
-          (status) => {
-            if (status.isLoaded && status.didJustFinish) {
-              setPlayingAudioIndex(null);
-            }
-          }
-        );
-        soundRef.current = sound;
+        audioPlayer.replace({ uri: resolveMediaUrl(option) });
+        audioPlayer.play();
         setPlayingAudioIndex(index);
       }
     } catch (error) {

@@ -1,5 +1,5 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack, useRouter, useSegments, useRootNavigationState } from 'expo-router';
+import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router/react-navigation';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Linking from 'expo-linking';
@@ -77,7 +77,7 @@ export default function RootLayout() {
   // Synchroniser Appearance (React Native) et NativeWind avec le store
   useEffect(() => {
     if (settingsTheme === 'system') {
-      Appearance.setColorScheme(null);
+      Appearance.setColorScheme('unspecified');
       setNativeWindColorScheme('system');
     } else {
       Appearance.setColorScheme(settingsTheme as 'light' | 'dark');

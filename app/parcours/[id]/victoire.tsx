@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, Pressable, Image, Animated, ScrollView, Alert, Share } from 'react-native';
-import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
-import { Trophy, Clock, CheckCircle, Share2, Star, Leaf } from 'lucide-react-native';
-import LottieView from 'lottie-react-native';
 import { ReviewModal } from '@/src/components/features/reviews/ReviewModal';
-import { useSettingsStore } from '@/src/store/settings.store';
-import { useAuthStore } from '@/src/store/auth.store';
 import { useColorScheme } from '@/src/hooks/use-color-scheme';
+import { useAuthStore } from '@/src/store/auth.store';
+import { useSettingsStore } from '@/src/store/settings.store';
 import { formatDuration } from '@/src/utils/format';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import LottieView from 'lottie-react-native';
+import { CheckCircle, Clock, Leaf, Share2, Star, Trophy } from 'lucide-react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Alert, Animated, Image, Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 
 export default function VictoireScreen() {
   const systemColorScheme = useColorScheme();
@@ -52,7 +52,7 @@ export default function VictoireScreen() {
         updateUser({
           ...user,
           totalPoints: (user.totalPoints || 0) + score,
-          co2Saved: (user.co2Saved || 0) + co2Gained
+          co2Saved: (user.Saved || 0) + co2Gained
         });
       }
     }

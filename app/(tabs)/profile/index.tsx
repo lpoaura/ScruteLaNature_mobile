@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, View, Text, Pressable, Alert, Image, ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useAuthStore } from '@/src/store/auth.store';
-import { Leaf, LogOut, Trash2, ShieldAlert, Users, Settings, Heart } from 'lucide-react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { apiService } from '@/src/services/api.service';
-import { Badge } from '@/src/types/api.types';
 import { useColorScheme } from '@/src/hooks/use-color-scheme';
+import { apiService } from '@/src/services/api.service';
+import { useAuthStore } from '@/src/store/auth.store';
+import { Badge } from '@/src/types/api.types';
+import { useRouter } from 'expo-router';
+import { Heart, Leaf, Settings, ShieldAlert, Users } from 'lucide-react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -98,7 +98,7 @@ export default function ProfileScreen() {
       </View>
 
       {/* CO2 Économisé (Cliquable) */}
-      <View style={{ marginBottom: 20 }}>
+      {/* <View style={{ marginBottom: 20 }}>
         <Pressable 
           style={[styles.navCard, { width: '100%' }, isDark && styles.darkCard]}
           onPress={() => Alert.alert(
@@ -114,7 +114,7 @@ export default function ProfileScreen() {
             <Text style={[styles.navSubtitle, isDark && styles.darkTextMuted]}>Cliquez pour comprendre</Text>
           </View>
         </Pressable>
-      </View>
+      </View> */}
 
       {/* Navigation Rapide (Réseau d'amis / Paramètres) */}
       <View style={styles.quickNavContainer}>

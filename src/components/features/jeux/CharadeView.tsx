@@ -11,7 +11,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import { Audio } from 'expo-av';
+import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import type { Jeu } from '@/src/types/api.types';
 import { GameQuestion } from "./GameQuestion";
 import { resolveMediaUrl } from '@/src/services/filesystem.service';
@@ -29,17 +29,11 @@ export function CharadeView({ jeu, onSuccess, onFail, forceReveal }: CharadeView
   const insets = useSafeAreaInsets();
   const [answer, setAnswer] = useState('');
   const [isRevealed, setIsRevealed] = useState(false);
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const soundRef = useRef<Audio.Sound | null>(null);
+  const audioPlayer = useAudioPlayer();
+  const audioStatus = useAudioPlayerStatus(audioPlayer);
+  const loadedAudioUri = useRef<string | null>(null);
+  const isPlayingAudio = audioStatus.playing;
   const scrollViewRef = useRef<ScrollView>(null);
-
-  React.useEffect(() => {
-    return () => {
-      if (soundRef.current) {
-        soundRef.current.unloadAsync();
-      }
-    };
-  }, []);
 
   React.useEffect(() => {
     if (forceReveal) {
@@ -71,27 +65,14 @@ export function CharadeView({ jeu, onSuccess, onFail, forceReveal }: CharadeView
   const toggleMainAudio = async () => {
     if (!audioSource) return;
     try {
-      if (isPlayingAudio) {
-        if (soundRef.current) {
-          await soundRef.current.pauseAsync();
-          setIsPlayingAudio(false);
-        }
+      if (audioStatus.playing) {
+        audioPlayer.pause();
       } else {
-        if (!soundRef.current) {
-          const { sound } = await Audio.Sound.createAsync(
-            { uri: audioSource.uri },
-            { shouldPlay: true },
-            (status) => {
-              if (status.isLoaded && status.didJustFinish) {
-                setIsPlayingAudio(false);
-              }
-            }
-          );
-          soundRef.current = sound;
-        } else {
-          await soundRef.current.playAsync();
+        if (loadedAudioUri.current !== audioSource.uri) {
+          audioPlayer.replace(audioSource);
+          loadedAudioUri.current = audioSource.uri;
         }
-        setIsPlayingAudio(true);
+        audioPlayer.play();
       }
     } catch (error) {
       console.error("Error playing audio:", error);
