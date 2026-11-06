@@ -257,7 +257,7 @@ export function MiniJeuxManager({ jeux, etape, onAllCompleted, onQuit }: MiniJeu
 
 const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: '#F5F7F5',
     zIndex: 50, // Au-dessus de la carte
   },

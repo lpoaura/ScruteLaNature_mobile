@@ -578,10 +578,10 @@ export default function JeuParcoursScreen() {
     <View style={styles.container}>
 
       {/* ── CARTE OPENSTREETMAP (MapLibre) ── */}
-      <View style={StyleSheet.absoluteFillObject} pointerEvents={isPlayingGame ? 'none' : 'auto'}>
+      <View style={StyleSheet.absoluteFill} pointerEvents={isPlayingGame ? 'none' : 'auto'}>
         <Map
           ref={mapRef}
-          style={StyleSheet.absoluteFillObject}
+          style={StyleSheet.absoluteFill}
           logoPosition={{ bottom: -100, right: -100 }}
           attributionPosition={{ bottom: -100, right: -100 }}
           mapStyle=""
@@ -638,7 +638,8 @@ export default function JeuParcoursScreen() {
       </View>
 
       {/* ── HEADER ── */}
-      <View style={[styles.headerOverlay, { top: insets.top + 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}>
+      {!isPlayingGame && (
+      <View style={[styles.headerOverlay, { top: insets.top + 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}> 
         <View style={{ flexDirection: 'row', gap: 12 }}>
           <Pressable style={styles.iconBtn} onPress={handleQuit}>
             <Ionicons name="close" size={24} color="#1F2937" />
@@ -662,8 +663,10 @@ export default function JeuParcoursScreen() {
           </View>
         )}
       </View>
+      )}
 
       {/* ── FOOTER : Panneau info étape ── */}
+      {!isPlayingGame && (
       <View style={[styles.footerOverlay, { paddingBottom: insets.bottom + 20 }]}>
         <View style={styles.objectifCard}>
           <Text style={styles.objectifLabel}>
@@ -680,7 +683,7 @@ export default function JeuParcoursScreen() {
           <DistanceTrigger
             etapes={data?.etapes || []}
             currentEtapeOrder={currentEtapeOrder}
-            isActive={prepStep === 'ready' && data !== null && !isPlayingGame}
+            isActive={prepStep === 'ready' && data !== null}
             onStepReached={handleStepReached}
             isPlayingGame={isPlayingGame}
           />
@@ -725,6 +728,7 @@ export default function JeuParcoursScreen() {
           )}
         </View>
       </View>
+      )}
       <CarnetDeBordModal 
         visible={isCarnetModalVisible} 
         onClose={() => setIsCarnetModalVisible(false)} 

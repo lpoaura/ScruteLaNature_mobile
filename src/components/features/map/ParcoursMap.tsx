@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e5e7eb', // gray-200 pour le fond en attendant le chargement
   },
   map: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   warningContainer: {
     position: 'absolute',

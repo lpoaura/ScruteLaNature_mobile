@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   pieceOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.4)',
   },

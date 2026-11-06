@@ -440,11 +440,11 @@ export default function ParcoursDetailScreen() {
                 {/* Arrière-plan flou d'ambiance pour enrober élégamment le format de l'image */}
                 <Image
                   source={{ uri: resolveMediaUrl(parcours.coverImage) }}
-                  style={[StyleSheet.absoluteFillObject, { opacity: 0.55 }]}
+                  style={[StyleSheet.absoluteFill, { opacity: 0.55 }]}
                   resizeMode="cover"
                   blurRadius={Platform.OS === 'ios' ? 22 : 14}
                 />
-                <View style={[StyleSheet.absoluteFillObject, { backgroundColor: 'rgba(0,0,0,0.2)' }]} />
+                <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.2)' }]} />
                 {/* Image principale visible en intégralité */}
                 <Image
                   source={{ uri: resolveMediaUrl(parcours.coverImage) }}
@@ -466,7 +466,7 @@ export default function ParcoursDetailScreen() {
             style={[styles.floatingBackBtn, { top: insets.top + 12, left: 16 }]}
             onPress={() => router.back()}
           >
-            <BlurView intensity={30} tint="dark" style={StyleSheet.absoluteFillObject} />
+            <BlurView intensity={30} tint="dark" style={StyleSheet.absoluteFill} />
             <Ionicons name="chevron-back" size={24} color="#fff" />
           </Pressable>
 
@@ -762,7 +762,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   heroGradient: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: '#000',
   },
   floatingBackBtn: {

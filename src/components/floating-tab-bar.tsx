@@ -389,7 +389,7 @@ const styles = StyleSheet.create({
         color: '#111',
     },
     activeBackground: {
-        ...StyleSheet.absoluteFillObject,
+        ...StyleSheet.absoluteFill,
         backgroundColor: 'rgba(255, 255, 255, 0.85)',
         borderRadius: 30,
         shadowColor: '#000',

@@ -431,7 +431,7 @@ export default function SearchScreen() {
       {/* --- CARTE EN PLEIN ÉCRAN (OpenStreetMap via MapLibre) --- */}
       <Map
         ref={mapRef}
-        style={StyleSheet.absoluteFillObject}
+        style={StyleSheet.absoluteFill}
         logoPosition={{ bottom: -100, right: -100 }}
         attributionPosition={{ bottom: -100, right: -100 }}
         mapStyle={EMPTY_MAP_STYLE}
